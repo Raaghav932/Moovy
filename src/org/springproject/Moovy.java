@@ -68,7 +68,7 @@ public class Moovy{
 			if(targetFile.exists()) {
 				Logger.info("it exists");
 			}else {
-				Logger.info("Should create a file");
+				Logger.info("Should create a file.");
 				targetFile.createNewFile();
 			}
 			OutputStream outStream = new FileOutputStream(targetFile);
