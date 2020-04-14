@@ -6,6 +6,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -16,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.springproject.db.Vehicles;
 import org.tinylog.Logger;
 
 @Path("moovy")
@@ -36,6 +40,14 @@ public class Moovy{
 			return "hello, "+name;
 		}
 		
+	}
+	@GET
+	@Path("db")
+	public String queryDb(){
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("Moovydb");
+		EntityManager em = emf.createEntityManager();
+		Vehicles test = em.find(Vehicles.class, 1);
+		return(test.toString());	
 	}
 	@POST
 	@Path("form")
