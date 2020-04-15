@@ -19,6 +19,9 @@ import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.springproject.db.DBHelper;
+import org.springproject.db.Posts;
+import org.springproject.db.DBHelper;
 import org.springproject.db.Vehicles;
 import org.tinylog.Logger;
 
@@ -43,11 +46,21 @@ public class Moovy{
 	}
 	@GET
 	@Path("db")
-	public String queryDb(){
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("Moovydb");
+	public String queryDb(@QueryParam("vname")int id){
+		/*EntityManagerFactory emf = Persistence.createEntityManagerFactory("Moovydb");
 		EntityManager em = emf.createEntityManager();
 		Vehicles test = em.find(Vehicles.class, 1);
-		return(test.toString());	
+		return(test.toString());*/
+		DBHelper helper = new DBHelper();
+        String s = helper.getVehiclesById(id);
+        return "your vehicle id is, "+ s ;
+	}
+	@GET
+	@Path("posts")
+	public String findPosts(@QueryParam("search")String name){
+		DBHelper helper = new DBHelper();
+        Posts p = helper.getPostsByName(name);
+        return p.toString();
 	}
 	@POST
 	@Path("form")
