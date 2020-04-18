@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -47,10 +48,6 @@ public class Moovy{
 	@GET
 	@Path("db")
 	public String queryDb(@QueryParam("vname")int id){
-		/*EntityManagerFactory emf = Persistence.createEntityManagerFactory("Moovydb");
-		EntityManager em = emf.createEntityManager();
-		Vehicles test = em.find(Vehicles.class, 1);
-		return(test.toString());*/
 		DBHelper helper = new DBHelper();
         String s = helper.getVehiclesById(id);
         return "your vehicle id is, "+ s ;
@@ -58,8 +55,9 @@ public class Moovy{
 	@GET
 	@Path("posts")
 	public String findPosts(@QueryParam("search")String name){
+		Logger.info("findPosts method called");
 		DBHelper helper = new DBHelper();
-        Posts p = helper.getPostsByName(name);
+        ArrayList<Posts> p = helper.getPostsByName(name);
         return p.toString();
 	}
 	@POST
@@ -89,7 +87,6 @@ public class Moovy{
 			Logger.info("Used the correct form and got the file of type {}",fdcd.getType());
 			byte[] buffer = new byte[1024];
 			File targetFile = File.createTempFile("tmp", null, new File("/Users/raaghavagarwal/Programming/MySpringProject/Upload"));
-			//File targetFile = new File("/Users/raaghavagarwal/Programming/MySpringProject/Upload/targetFile.tmp");
 			if(targetFile.exists()) {
 				Logger.info("it exists");
 			}else {
@@ -104,8 +101,18 @@ public class Moovy{
 			outStream.flush();
 			outStream.close();
 			fileInputStream.close();
-			return String.format("The form for your %s has been accepted with title: %s, description: %s, price: %s, file %s [%d size]",vehicles, title,description,price
-					,fdcd.getName(),fdcd.getSize()
+			String picture = targetFile.getName();
+			Posts post = new Posts();
+			post.setDescrption(description);
+			post.setName(title);
+			post.setPrice(price.intValue());
+			post.setPicture(picture);
+			DBHelper helper = new DBHelper();
+			int vehiclefk = helper.getVehiclefk(vehicles);
+			post.setVehicle_fk(vehiclefk);
+			helper.createPost(post);
+			return String.format("The form for your %s has been accepted with title: %s, description: %s, price: %s, file %s [%d size], %s",vehicles, title,description,price
+					,fdcd.getName(),fdcd.getSize(),picture
 					);
 		}
 		catch(Exception e)

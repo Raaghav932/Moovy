@@ -1,6 +1,7 @@
 package org.springproject.db;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,6 +16,7 @@ public class Posts implements Serializable{
 	private int vehicle_fk;
 	private String descrption;
 	private String picture;
+
 	
 	
 	public Posts() {
@@ -36,7 +38,6 @@ public class Posts implements Serializable{
 	public String getName() {
 		return name;
 	}
-
 
 	public void setName(String name) {
 		this.name = name;
@@ -84,7 +85,7 @@ public class Posts implements Serializable{
 
 
 	@Override
-	public String toString() {
+	public String toString() {	
 		return "Posts [id=" + id + ", name=" + name + ", price=" + price + ", vehicle_fk=" + vehicle_fk
 				+ ", descrption=" + descrption + ", picture=" + picture + "]";
 	}
